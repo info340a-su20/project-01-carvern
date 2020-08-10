@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link href="css/style.css" rel="stylesheet">
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <head profile="http://www.w3.org/2005/10/profile">
+        <link rel="icon" 
+              type="image/png" 
+              href="https://i.imgur.com/N8Ix8qn.png">
+
+    <meta charset="utf-8">
+    <meta name="author" content="Nicole Carver">
+    <meta name="description" content="Project Homepage">
+    <title>Climate Change</title>
+</head>
+
+<body>
+    <header class="headertop">
+        <h1>AirBNB Listings In Seattle</h1>
+        <p>Explore Seattle’s AirBNB listings, where are the most lucrative areas of Seattle?</p>
+    </header>
+    
+    <div class="contain">
+      <div class="col-1 mapcontain">
+          <img src="img/seattlemap.png" alt="seattle map">
+      </div>
+
+      <div class="col-2 filters">
+          <div class="card"> 
+              <h2>Explore By Neighborhood</h2>
+              <div class="dropdown">
+                <span class="droptitle" aria-label="neighborhood dropdown">Seattle Neighborhoods  <i class="fa fa-caret-down"></i></span>
+                <div class="dropdown-content">
+                  <a href="">Neighborhood 1</a>
+                  <a href="">Neighborhood 2</a>
+                </div>
+              </div>
+          </div>
+          <div class="card"> 
+            <h2>Explore By Room Type</h2>
+            <label class="roomtypecont"><p class="entire">Entire Home/Apt</p>
+                <input type="checkbox" checked="checked" aria-label="entire home checkmark">
+                <span class="checkmark"></span>
+              </label>
+              <label class="roomtypecont"><p class="private">Private Room</p>
+                <input type="checkbox" aria-label="private room checkmark">
+                <span class="checkmark"></span>
+              </label>
+              <label class="roomtypecont"><p class="shared">Shared Room</p>
+                <input type="checkbox" aria-label="shared room checkmark">
+                <span class="checkmark"></span>
+              </label>
+          </div>
+          <div class="card"> 
+            <h2>Explore By Price</h2>
+            <div class="slidecontainer">
+                <input type="range" min="0" max="6000" value="3000" class="slider" id="myRange" aria-label="price-range">
+                Min: $0
+                <span style="float: right;">Max: $6000</span>
+              </div>
+          </div>
+          <div class="card"> 
+            <h2>Explore By Review Score</h2>
+            <div class="slidecontainer">
+                <input type="range" min="50" max="100" value="70" class="slider" id="myRange" aria-label="review-range">
+                Min: 50
+                <span style="float: right;">Max: 100</span>
+              </div>
+          </div>
+      </div>
+      
+      <div class="col-3 imgs">
+        <div class="card-img1" aria-label="seattle-image"></div>
+        <div class="card-img2" aria-label="uw-image"></div>
+      </div>
+    </div>
+
+    <footer>
+        <p>© Nicole Carver 2020</p>
+    </footer>
+  </body>
+
+</html>
