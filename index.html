@@ -1,10 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <link href="css/style.css" rel="stylesheet">
-
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <!-- jquery slider -->
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fetch/2.0.3/fetch.min.js"></script>
+
+     <!-- From LEAFLET js -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"
+   integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
+   crossorigin=""/>
+   <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"
+   integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew=="
+   crossorigin=""></script>
+
+    <link href="css/style.css" rel="stylesheet">
+    <script type="text/javascript" src="js/js.js"></script>
 
         <link rel="icon" 
               type="image/png" 
@@ -13,7 +28,7 @@
     <meta charset="utf-8">
     <meta name="author" content="Nicole Carver">
     <meta name="description" content="Project Homepage">
-    <title>Seattle Airbnbs</title>
+    <title>Airbnb Seattle</title>
 </head>
 
 <body>
@@ -24,8 +39,26 @@
     
     <div class="contain">
       <div class="col-1 mapcontain">
-          <img src="img/seattlemap.png" alt="seattle map">
+        <div id="map"></div>
       </div>
+      <script>
+        var map = L.map('map',{ center: [47.508013, -122.2455167], zoom: 10 });
+        L.tileLayer('https://api.maptiler.com/maps/basic/{z}/{x}/{y}.png?key=mYjABEBBqAVmEo0wwB53',{
+          tileSize: 512,
+          zoomOffset: -1,
+          minZoom: 1,
+          attribution: '<a href="https://www.maptiler.com/copyright/" target="_blank">© MapTiler</a> <a href="https://www.openstreetmap.org/copyright" target="_blank">© OpenStreetMap contributors</a>',
+          crossOrigin: true
+        }).addTo(map);
+
+        $.getJSON("data/listings.json",function(data){
+          let mapPoints = L.geoJson(data,{
+            onEachFeature: function (feature, layer) {
+            layer.bindPopup(feature.properties.name);
+        }
+    }).addTo(map);
+});
+      </script>
 
       <div class="col-2 filters">
           <div class="card"> 
@@ -55,19 +88,25 @@
           </div>
           <div class="card"> 
             <h2>Explore By Price</h2>
-            <div class="slidecontainer">
-                <input type="range" min="0" max="6000" value="3000" class="slider" id="myRange" aria-label="price-range">
-                Min: $0
-                Max: $6000
-              </div>
+            <p>
+              <!-- jquery slider code -->
+              <label for="amount">Price range:</label>
+              <input type="text" id="amount" readonly style="border:0; color:#933EFF; font-weight:bold;">
+            </p>
+             
+            <div id="slider-range"></div>
+                
           </div>
           <div class="card"> 
             <h2>Explore By Review Score</h2>
-            <div class="slidecontainer">
-                <input type="range" min="50" max="100" value="70" class="slider" id="myRange2" aria-label="review-range">
-                Min: 50
-                Max: 100
-              </div>
+            <p>
+              <!-- jquery slider code -->
+              <label for="amount2">Review Score:</label>
+              <input type="text" id="amount2" readonly style="border:0; color:#933EFF; font-weight:bold;">
+            </p>
+
+            <div id="slider2-range"></div>
+                
           </div>
       </div>
       
