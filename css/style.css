@@ -2,25 +2,6 @@
     box-sizing: border-box; 
   }
 
-  @media(max-width: 768px) {
-      .col-3 {
-          display: none;
-      }
-
-      .contain .card {
-          font-size: 10px;
-          line-height: 60%;
-      }
-
-      .slider {
-          margin: 0!important;
-      }
-
-      .roomtypecont {
-          display: inline-block!important;
-      }
-  }
-
   body {
     color: #242424;
     margin: 0;
@@ -70,14 +51,14 @@
     background-color: white;
     height: 32.5vh;
     background-image:url('../img/seattle.jpg');
-    background-size: 100%;
+    background-size: fit;
 }
 
 .contain .card-img2 {
     background-color: white;
     height: 32.5vh;
     background-image:url('../img/uw.jpg');
-    background-size: 100%;
+    background-size: fit;
 }
 
   .col-1, .col-2, .col-3 {
@@ -236,3 +217,20 @@
   background-color: #933EFF;
 }
 
+@media(max-width: 768px) {
+  .col-3 {
+      display: none;
+  }
+
+  .contain .card {
+      font-size: 10px;
+  }
+
+  .slider {
+      margin: 0!important;
+  }
+
+  .roomtypecont {
+      display: inline-block!important;
+  }
+}
