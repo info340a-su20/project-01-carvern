@@ -40,7 +40,7 @@ $( function() {
   $.getJSON("data/map.geojson",function(data){
     let mapPoints = L.geoJson(data,{
       onEachFeature: function (feature, layer) {
-        layer.bindPopup("Name: " + feature.properties.name + "\n Price " + feature.properties.price);
+        layer.bindPopup("Name: " + feature.properties.name + "<br>Price: " + feature.properties.price);
   }
 }).addTo(map);
 });
