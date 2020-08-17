@@ -51,7 +51,7 @@
           crossOrigin: true
         }).addTo(map);
 
-        $.getJSON("data/listings.json",function(data){
+        $.getJSON("data/map.geojson",function(data){
           let mapPoints = L.geoJson(data,{
             onEachFeature: function (feature, layer) {
             layer.bindPopup(feature.properties.name);
