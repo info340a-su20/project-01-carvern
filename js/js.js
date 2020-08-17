@@ -27,3 +27,20 @@ $( function() {
     $( "#amount2" ).val($( "#slider2-range" ).slider( "values", 0 ) +
       " - " + $( "#slider2-range" ).slider( "values", 1 ) );
   } );
+
+  var map = L.map('map',{ center: [47.608013, -122.3321], zoom: 12 });
+  L.tileLayer('https://api.maptiler.com/maps/basic/{z}/{x}/{y}.png?key=mYjABEBBqAVmEo0wwB53',{
+    tileSize: 512,
+    zoomOffset: -1,
+    minZoom: 1,
+    attribution: '<a href="https://www.maptiler.com/copyright/" target="_blank">© MapTiler</a> <a href="https://www.openstreetmap.org/copyright" target="_blank">© OpenStreetMap contributors</a>',
+    crossOrigin: true
+  }).addTo(map);
+
+  $.getJSON("data/map.geojson",function(data){
+    let mapPoints = L.geoJson(data,{
+      onEachFeature: function (feature, layer) {
+      layer.bindPopup(feature.properties.name);
+  }
+}).addTo(map);
+});

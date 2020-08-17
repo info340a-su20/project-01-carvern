@@ -19,7 +19,6 @@
    crossorigin=""></script>
 
     <link href="css/style.css" rel="stylesheet">
-    <script type="text/javascript" src="js/js.js"></script>
 
         <link rel="icon" 
               type="image/png" 
@@ -41,24 +40,6 @@
       <div class="col-1 mapcontain">
         <div id="map"></div>
       </div>
-      <script>
-        var map = L.map('map',{ center: [47.608013, -122.1455167], zoom: 12 });
-        L.tileLayer('https://api.maptiler.com/maps/basic/{z}/{x}/{y}.png?key=mYjABEBBqAVmEo0wwB53',{
-          tileSize: 512,
-          zoomOffset: -1,
-          minZoom: 1,
-          attribution: '<a href="https://www.maptiler.com/copyright/" target="_blank">© MapTiler</a> <a href="https://www.openstreetmap.org/copyright" target="_blank">© OpenStreetMap contributors</a>',
-          crossOrigin: true
-        }).addTo(map);
-
-        $.getJSON("data/map.geojson",function(data){
-          let mapPoints = L.geoJson(data,{
-            onEachFeature: function (feature, layer) {
-            layer.bindPopup(feature.properties.name);
-        }
-    }).addTo(map);
-});
-      </script>
 
       <div class="col-2 filters">
           <div class="card"> 
@@ -120,5 +101,8 @@
         <p>© Nicole Carver 2020</p>
     </footer>
   </body>
+
+  <script type="text/javascript" src="js/js.js"></script>
+
 
 </html>
