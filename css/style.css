@@ -112,6 +112,9 @@
     padding: 12px 16px;
     z-index: 1;
     margin: 0!important;
+    font-weight: bold;
+    height: 20vh;
+    overflow: auto;
   }
   
   .dropdown:hover .dropdown-content {
@@ -143,6 +146,12 @@
 
  .shared {
     color: #20BD4C;
+ }
+
+ .range {
+  border:0; 
+  color:#933EFF; 
+  font-weight:bold;
  }
 
 .checkmark {

@@ -1,5 +1,4 @@
 /* code from jquery ui slider */
-
 $( function() {
     $( "#slider-range" ).slider({
       range: true,
@@ -13,7 +12,7 @@ $( function() {
     $( "#amount" ).val( "$" + $( "#slider-range" ).slider( "values", 0 ) +
       " - $" + $( "#slider-range" ).slider( "values", 1 ) );
   } );
-
+ 
   $( function() {
     $( "#slider2-range" ).slider({
       range: true,
@@ -28,6 +27,11 @@ $( function() {
       " - " + $( "#slider2-range" ).slider( "values", 1 ) );
   } );
 
+
+  /* leaflet map */
+  
+  let URL = "https://info340a-su20.github.io/project-01-carvern/data/map.geojson";
+
   var map = L.map('map',{ center: [47.608013, -122.3321], zoom: 12 });
   L.tileLayer('https://api.maptiler.com/maps/basic/{z}/{x}/{y}.png?key=mYjABEBBqAVmEo0wwB53',{
     tileSize: 512,
@@ -37,10 +41,13 @@ $( function() {
     crossOrigin: true
   }).addTo(map);
 
-  $.getJSON("data/map.geojson",function(data){
-    let mapPoints = L.geoJson(data,{
+  $.getJSON(URL,function(data){
+    L.geoJson(data,{
       onEachFeature: function (feature, layer) {
-        layer.bindPopup("Name: " + feature.properties.name + "<br>Price: " + feature.properties.price);
+        layer.bindPopup("<b>Name:</b> " + feature.properties.name 
+        + "<br><b>Neighborhood:</b> " + feature.properties.neighbourhood
+        + "<br><b>Room Type:</b> " + feature.properties.room_type 
+        + "<br><b>Price:</b> $" + feature.properties.price);
   }
 }).addTo(map);
 });
