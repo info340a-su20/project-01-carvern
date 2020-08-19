@@ -15,6 +15,11 @@
       font-size: 30px;
   }
 
+  header a {  
+    color: #933EFF;
+    font-weight: bold;
+  }
+
   h2 {
     color: #933EFF;
     font-size: 20px;

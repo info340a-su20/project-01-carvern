@@ -1,10 +1,6 @@
 let entireHome,
     privateRoom,
-    allRooms,
-    minPrice,
-    maxPrice,
-    minReview,
-    maxReview;
+    allRooms;
 
 /* code from jquery ui slider */
 $( function() {
@@ -49,7 +45,13 @@ $( function() {
       " - " + $( "#slider2-range" ).slider( "values", 1 ) );
   } );
 
+
     /* slider updates */
+    let minPrice = 0;
+    let maxPrice = 750;
+    let minReview = 0;
+    let maxReview = 100;
+
     function filterPrices() {
       fetch(URL)
       .then(function(response){ return response.json() })
@@ -62,7 +64,8 @@ $( function() {
             + "<br><b>Room Type:</b> " + feature.properties.room_type 
             + "<br><b>Price:</b> $" + feature.properties.price);
           }, 
-          filter: function(feature) { return (feature.properties.price >= minPrice) && (feature.properties.price <= maxPrice) }
+          filter: function(feature) { return (feature.properties.price >= minPrice) && (feature.properties.price <= maxPrice) &&
+            (feature.properties.number_of_reviews >= minReview) && (feature.properties.number_of_reviews <= maxReview)}
         }).addTo(map);
       })
     } 
@@ -79,7 +82,8 @@ $( function() {
             + "<br><b>Room Type:</b> " + feature.properties.room_type 
             + "<br><b>Price:</b> $" + feature.properties.price);
           }, 
-          filter: function(feature) { return (feature.properties.number_of_reviews >= minReview) && (feature.properties.number_of_reviews <= maxReview) }
+          filter: function(feature) { return (feature.properties.number_of_reviews >= minReview) && (feature.properties.number_of_reviews <= maxReview) 
+            && (feature.properties.price >= minPrice) && (feature.properties.price <= maxPrice)}
         }).addTo(map);
       })
     } 
@@ -110,7 +114,8 @@ $( function() {
         + "<br><b>Room Type:</b> " + feature.properties.room_type 
         + "<br><b>Price:</b> $" + feature.properties.price);
       }, 
-      filter: function(feature) { return feature.properties.room_type == "Entire home/apt" }
+      filter: function(feature) { return feature.properties.room_type == "Entire home/apt" && (feature.properties.number_of_reviews >= minReview) && (feature.properties.number_of_reviews <= maxReview) 
+      && (feature.properties.price >= minPrice) && (feature.properties.price <= maxPrice)}
     });
   
     privateRoom = L.geoJson(data, {
@@ -120,7 +125,8 @@ $( function() {
         + "<br><b>Room Type:</b> " + feature.properties.room_type 
         + "<br><b>Price:</b> $" + feature.properties.price);
       }, 
-      filter: function(feature) { return feature.properties.room_type == "Private room" }
+      filter: function(feature) { return feature.properties.room_type == "Private room" && (feature.properties.number_of_reviews >= minReview) && (feature.properties.number_of_reviews <= maxReview) 
+      && (feature.properties.price >= minPrice) && (feature.properties.price <= maxPrice) }
     });
 
     allRooms = L.featureGroup([entireHome, privateRoom]);
@@ -143,29 +149,29 @@ $( function() {
       _callback();
     }
 
-  var radioButtons = document.getElementsByName('fltRoom');
-  
-  for (var r in radioButtons){
-    radioButtons[r].onclick = function() {
-      switch (this.value) {
-        
-        case 'Entire':
-          remove( () => {
-            entireHome.addTo(map);
-          });
-          break;
+    var radioButtons = document.getElementsByName('fltRoom');
+    for (var r in radioButtons){
+      radioButtons[r].onclick = function() {
+        switch (this.value) {
           
-        case 'Private':
-          remove( () => {
-            privateRoom.addTo(map);
-          });
-          break;
-          
-        default:
-          allRooms.addTo(map);
+          case 'Entire':
+            remove( () => {
+              entireHome.addTo(map);
+            });
+            break;
+            
+          case 'Private':
+            remove( () => {
+              privateRoom.addTo(map);
+            });
+            break;
+            
+          default:
+            allRooms.addTo(map);
+        }
       }
     }
-  }
+
 
 
    // let reviewRange = document.getElementsByName('amount2');
