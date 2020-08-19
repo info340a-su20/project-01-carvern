@@ -1,3 +1,8 @@
+/* global variables */ 
+let entireHome,
+    privateRoom,
+    allRooms;
+
 /* code from jquery ui slider */
 $( function() {
     $( "#slider-range" ).slider({
@@ -45,49 +50,69 @@ $( function() {
   .then(function(response){ return response.json() })
   .then(function(data){
   
-    var entireHome = L.geoJson(data, { 
+    entireHome = L.geoJson(data, { 
+      onEachFeature: function (feature, layer) {
+        layer.bindPopup("<b>Name:</b> " + feature.properties.name 
+        + "<br><b>Neighborhood:</b> " + feature.properties.neighbourhood
+        + "<br><b>Room Type:</b> " + feature.properties.room_type 
+        + "<br><b>Price:</b> $" + feature.properties.price);
+      }, 
       filter: function(feature) { return feature.properties.room_type == "Entire home/apt" }
     });
   
-    var privateRoom = L.geoJson(data, { 
+    privateRoom = L.geoJson(data, {
+      onEachFeature: function (feature, layer) {
+        layer.bindPopup("<b>Name:</b> " + feature.properties.name 
+        + "<br><b>Neighborhood:</b> " + feature.properties.neighbourhood
+        + "<br><b>Room Type:</b> " + feature.properties.room_type 
+        + "<br><b>Price:</b> $" + feature.properties.price);
+      }, 
       filter: function(feature) { return feature.properties.room_type == "Private room" }
     });
 
-    var allRooms = L.layerGroup([entireHome, privateRoom]);
+    allRooms = L.featureGroup([entireHome, privateRoom]);
     allRooms.addTo(map);
   
-    L.control.layers({
+    var myData = L.control.layers({
       "All rooms": allRooms,
       "Entire home": entireHome,
       "Private Room": privateRoom
     }).addTo(map);
-  
   });
 
-  /** 
-  var allmapData = $.getJSON(URL,function(data){
-    L.geoJson(data,{
-      onEachFeature: function (feature, layer) {
-        layer.bindPopup("<b>Name:</b> " + feature.properties.name 
-        + "<br><b>Neighborhood:</b> " + feature.properties.neighbourhood
-        + "<br><b>Room Type:</b> " + feature.properties.room_type 
-        + "<br><b>Price:</b> $" + feature.properties.price);
-      }
-   }).addTo(map);
-  });
-  
-  var entireRoomData = $.getJSON(URL,function(data){
-    L.geoJson(data,{
-      onEachFeature: function (feature, layer) {
-        layer.bindPopup("<b>Name:</b> " + feature.properties.name 
-        + "<br><b>Neighborhood:</b> " + feature.properties.neighbourhood
-        + "<br><b>Room Type:</b> " + feature.properties.room_type 
-        + "<br><b>Price:</b> $" + feature.properties.price);
-      },
-      filter: function(feature, layer) {
+   /* updates map based on room */
 
-      }
-   }).addTo(map);
-  });
+   function remove(_callback) {
+      map.eachLayer( (layer) => {
+        if (layer.toGeoJSON)
+          map.removeLayer(layer);
+      });
+      _callback();
+    }
+
+  var radioButtons = document.getElementsByName('fltRoom');
   
-   */
+  for (r in radioButtons){
+    radioButtons[r].onclick = function() {
+      switch (this.value) {
+        
+        case 'Entire':
+          remove( () => {
+            entireHome.addTo(map);
+          });
+          break;
+          
+        case 'Private':
+          remove( () => {
+            privateRoom.addTo(map);
+          });
+          break;
+          
+        default:
+          allRooms.addTo(map);
+      }
+    }
+  }
+
+    /* slider updates */
+
