@@ -67,6 +67,7 @@ $( function() {
             + "<br><b>Price:</b> $" + feature.properties.price);
           }, 
           filter: function(feature) { 
+            console.log(roomType);
             if(roomType != "All") {
               return (feature.properties.price >= minPrice) && (feature.properties.price <= maxPrice) &&
               (feature.properties.number_of_reviews >= minReview) && (feature.properties.number_of_reviews <= maxReview) && feature.properties.room_type == roomType;
@@ -96,7 +97,7 @@ $( function() {
               return (feature.properties.price >= minPrice) && (feature.properties.price <= maxPrice) &&
               (feature.properties.number_of_reviews >= minReview) && (feature.properties.number_of_reviews <= maxReview) && feature.properties.room_type == roomType;
             }
-            
+
             return (feature.properties.number_of_reviews >= minReview) && (feature.properties.number_of_reviews <= maxReview) 
             && (feature.properties.price >= minPrice) && (feature.properties.price <= maxPrice)}
         }).addTo(map);
@@ -130,13 +131,7 @@ $( function() {
         + "<br><b>Price:</b> $" + feature.properties.price);
       }, 
       filter: function(feature) { 
-        if(roomType != "All") {
-          return feature.properties.room_type == "Entire home/apt" && (feature.properties.number_of_reviews >= minReview) && (feature.properties.number_of_reviews <= maxReview) 
-          && (feature.properties.price >= minPrice) && (feature.properties.price <= maxPrice) && feature.properties.room_type == roomType;
-      } 
-
-      return feature.properties.room_type == "Entire home/apt" && (feature.properties.number_of_reviews >= minReview) && (feature.properties.number_of_reviews <= maxReview) 
-        && (feature.properties.price >= minPrice) && (feature.properties.price <= maxPrice)}
+      return feature.properties.room_type == "Entire home/apt" }
     });
   
     privateRoom = L.geoJson(data, {
@@ -147,23 +142,11 @@ $( function() {
         + "<br><b>Price:</b> $" + feature.properties.price);
       }, 
       filter: function(feature) { 
-        if(roomType != "All") {
-          return feature.properties.room_type == "Private room" && (feature.properties.number_of_reviews >= minReview) && (feature.properties.number_of_reviews <= maxReview) 
-          && (feature.properties.price >= minPrice) && (feature.properties.price <= maxPrice) && feature.properties.room_type == roomType;
-        }
-
-        return feature.properties.room_type == "Private room" && (feature.properties.number_of_reviews >= minReview) && (feature.properties.number_of_reviews <= maxReview) 
-          && (feature.properties.price >= minPrice) && (feature.properties.price <= maxPrice)}
+        return feature.properties.room_type == "Private room"}
     });
 
     allRooms = L.featureGroup([entireHome, privateRoom]);
     allRooms.addTo(map);
-  
-    L.control.layers({
-      "All rooms": allRooms,
-      "Entire home": entireHome,
-      "Private Room": privateRoom
-    }).addTo(map);
   });
 
    /* updates map based on room */
@@ -183,23 +166,67 @@ $( function() {
           roomType = "Entire home/apt";
         else if(this.value == "Private")
           roomType = "Private room";
+        else 
+          roomType = "All";
 
         switch (this.value) {
           
           case 'Entire':
             remove( () => {
-              entireHome.addTo(map);
+              fetch(URL)
+              .then(function(response){ return response.json() })
+              .then(function(data){ 
+                entireHome = L.geoJson(data, { 
+                  onEachFeature: function (feature, layer) {
+                    layer.bindPopup("<b>Name:</b> " + feature.properties.name 
+                    + "<br><b>Neighborhood:</b> " + feature.properties.neighbourhood
+                    + "<br><b>Room Type:</b> " + feature.properties.room_type 
+                    + "<br><b>Price:</b> $" + feature.properties.price);
+                  }, 
+                  filter: function(feature) { 
+                  return feature.properties.room_type == "Entire home/apt" && (feature.properties.number_of_reviews >= minReview) && (feature.properties.number_of_reviews <= maxReview) 
+                  && (feature.properties.price >= minPrice) && (feature.properties.price <= maxPrice)}
+                }).addTo(map);
+              });
             });
             break;
             
           case 'Private':
             remove( () => {
-              privateRoom.addTo(map);
+              fetch(URL)
+              .then(function(response){ return response.json() })
+              .then(function(data){ 
+                privateRoom = L.geoJson(data, { 
+                  onEachFeature: function (feature, layer) {
+                    layer.bindPopup("<b>Name:</b> " + feature.properties.name 
+                    + "<br><b>Neighborhood:</b> " + feature.properties.neighbourhood
+                    + "<br><b>Room Type:</b> " + feature.properties.room_type 
+                    + "<br><b>Price:</b> $" + feature.properties.price);
+                  }, 
+                  filter: function(feature) { 
+                  return feature.properties.room_type == "Private room" && (feature.properties.number_of_reviews >= minReview) && (feature.properties.number_of_reviews <= maxReview) 
+                  && (feature.properties.price >= minPrice) && (feature.properties.price <= maxPrice)}
+                }).addTo(map);
+              });
             });
             break;
             
           default:
-            allRooms.addTo(map);
+            fetch(URL)
+              .then(function(response){ return response.json() })
+              .then(function(data){ 
+                privateRoom = L.geoJson(data, { 
+                  onEachFeature: function (feature, layer) {
+                    layer.bindPopup("<b>Name:</b> " + feature.properties.name 
+                    + "<br><b>Neighborhood:</b> " + feature.properties.neighbourhood
+                    + "<br><b>Room Type:</b> " + feature.properties.room_type 
+                    + "<br><b>Price:</b> $" + feature.properties.price);
+                  }, 
+                  filter: function(feature) { 
+                  return (feature.properties.number_of_reviews >= minReview) && (feature.properties.number_of_reviews <= maxReview) 
+                  && (feature.properties.price >= minPrice) && (feature.properties.price <= maxPrice)}
+                }).addTo(map);
+              });
         }
       }
     }
