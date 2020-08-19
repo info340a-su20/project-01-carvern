@@ -1,7 +1,9 @@
 /* global variables */ 
 let entireHome,
     privateRoom,
-    allRooms;
+    allRooms,
+    minPrice,
+    maxPrice;
 
 /* code from jquery ui slider */
 $( function() {
@@ -12,6 +14,15 @@ $( function() {
       values: [ 75, 300 ],
       slide: function( event, ui ) {
         $( "#amount" ).val( "$" + ui.values[ 0 ] + " - $" + ui.values[ 1 ] );
+      },
+      change: function(event, ui) {
+        remove( () => {
+          minPrice = $( "#slider-range" ).slider( "values", 0 );
+          console.log(minPrice);
+          maxPrice = $( "#slider-range" ).slider( "values", 0 );
+          console.log(maxPrice);
+          filterPrices();
+        });
       }
     });
     $( "#amount" ).val( "$" + $( "#slider-range" ).slider( "values", 0 ) +
@@ -26,11 +37,39 @@ $( function() {
       values: [ 75, 100 ],
       slide: function( event, ui ) {
         $( "#amount2" ).val(ui.values[ 0 ] + " - " + ui.values[ 1 ] );
+      },
+      change: function(event, ui) {
+        console.log("changed2");
       }
     });
     $( "#amount2" ).val($( "#slider2-range" ).slider( "values", 0 ) +
       " - " + $( "#slider2-range" ).slider( "values", 1 ) );
   } );
+
+    /* slider updates */
+
+    document.addEventListener('DOMContentLoaded', (event) => {
+      let priceRange = document.getElementById('amount').value;
+      minPrice = priceRange.split('$')[1].split(' ')[0];
+      maxPrice = priceRange.split(' - $')[1];
+    })
+
+    function filterPrices() {
+      fetch(URL)
+      .then(function(response){ return response.json() })
+      .then(function(data){
+
+        filteredPrice = L.geoJson(data, {
+          onEachFeature: function (feature, layer) {
+            layer.bindPopup("<b>Name:</b> " + feature.properties.name 
+            + "<br><b>Neighborhood:</b> " + feature.properties.neighbourhood
+            + "<br><b>Room Type:</b> " + feature.properties.room_type 
+            + "<br><b>Price:</b> $" + feature.properties.price);
+          }, 
+          filter: function(feature) { return feature.properties.price >= minPrice && feature.properties.price <= maxPrice }
+        }).addTo(map);
+      })
+    } 
 
 
   /* leaflet map */
@@ -114,5 +153,6 @@ $( function() {
     }
   }
 
-    /* slider updates */
+
+   // let reviewRange = document.getElementsByName('amount2');
 
