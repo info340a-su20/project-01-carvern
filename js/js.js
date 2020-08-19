@@ -1,26 +1,25 @@
-/* global variables */ 
 let entireHome,
     privateRoom,
     allRooms,
     minPrice,
-    maxPrice;
+    maxPrice,
+    minReview,
+    maxReview;
 
 /* code from jquery ui slider */
 $( function() {
     $( "#slider-range" ).slider({
       range: true,
       min: 0,
-      max: 2000,
-      values: [ 75, 300 ],
+      max: 750,
+      values: [ 0, 750 ],
       slide: function( event, ui ) {
         $( "#amount" ).val( "$" + ui.values[ 0 ] + " - $" + ui.values[ 1 ] );
       },
-      change: function(event, ui) {
+      change: function() {
         remove( () => {
           minPrice = $( "#slider-range" ).slider( "values", 0 );
-          console.log(minPrice);
-          maxPrice = $( "#slider-range" ).slider( "values", 0 );
-          console.log(maxPrice);
+          maxPrice = $( "#slider-range" ).slider( "values", 1 );
           filterPrices();
         });
       }
@@ -32,14 +31,18 @@ $( function() {
   $( function() {
     $( "#slider2-range" ).slider({
       range: true,
-      min: 50,
+      min: 0,
       max: 100,
-      values: [ 75, 100 ],
+      values: [ 0, 100 ],
       slide: function( event, ui ) {
         $( "#amount2" ).val(ui.values[ 0 ] + " - " + ui.values[ 1 ] );
       },
-      change: function(event, ui) {
-        console.log("changed2");
+      change: function() {
+        remove( () => {
+          minReview = $( "#slider2-range" ).slider( "values", 0 );
+          maxReview = $( "#slider2-range" ).slider( "values", 1 );
+          filterReviews();
+        });
       }
     });
     $( "#amount2" ).val($( "#slider2-range" ).slider( "values", 0 ) +
@@ -47,29 +50,40 @@ $( function() {
   } );
 
     /* slider updates */
-
-    document.addEventListener('DOMContentLoaded', (event) => {
-      let priceRange = document.getElementById('amount').value;
-      minPrice = priceRange.split('$')[1].split(' ')[0];
-      maxPrice = priceRange.split(' - $')[1];
-    })
-
     function filterPrices() {
       fetch(URL)
       .then(function(response){ return response.json() })
       .then(function(data){
 
-        filteredPrice = L.geoJson(data, {
+        L.geoJson(data, {
           onEachFeature: function (feature, layer) {
             layer.bindPopup("<b>Name:</b> " + feature.properties.name 
             + "<br><b>Neighborhood:</b> " + feature.properties.neighbourhood
             + "<br><b>Room Type:</b> " + feature.properties.room_type 
             + "<br><b>Price:</b> $" + feature.properties.price);
           }, 
-          filter: function(feature) { return feature.properties.price >= minPrice && feature.properties.price <= maxPrice }
+          filter: function(feature) { return (feature.properties.price >= minPrice) && (feature.properties.price <= maxPrice) }
         }).addTo(map);
       })
     } 
+
+    function filterReviews() {
+      fetch(URL)
+      .then(function(response){ return response.json() })
+      .then(function(data){
+
+        L.geoJson(data, {
+          onEachFeature: function (feature, layer) {
+            layer.bindPopup("<b>Name:</b> " + feature.properties.name 
+            + "<br><b>Neighborhood:</b> " + feature.properties.neighbourhood
+            + "<br><b>Room Type:</b> " + feature.properties.room_type 
+            + "<br><b>Price:</b> $" + feature.properties.price);
+          }, 
+          filter: function(feature) { return (feature.properties.number_of_reviews >= minReview) && (feature.properties.number_of_reviews <= maxReview) }
+        }).addTo(map);
+      })
+    } 
+
 
 
   /* leaflet map */
@@ -112,7 +126,7 @@ $( function() {
     allRooms = L.featureGroup([entireHome, privateRoom]);
     allRooms.addTo(map);
   
-    var myData = L.control.layers({
+    L.control.layers({
       "All rooms": allRooms,
       "Entire home": entireHome,
       "Private Room": privateRoom
@@ -131,7 +145,7 @@ $( function() {
 
   var radioButtons = document.getElementsByName('fltRoom');
   
-  for (r in radioButtons){
+  for (var r in radioButtons){
     radioButtons[r].onclick = function() {
       switch (this.value) {
         
