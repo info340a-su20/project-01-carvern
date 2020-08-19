@@ -132,20 +132,14 @@
     user-select: none;
   }
 
-  .roomtypecont p {
-      font-weight: bold;
-  }
-
   .entire {
     color: #4DA1EF;
+    font-weight: bold;
  }
 
  .private {
     color: #EF4D4D;
- }
-
- .shared {
-    color: #20BD4C;
+    font-weight: bold;
  }
 
  .range {

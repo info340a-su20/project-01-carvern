@@ -41,13 +41,53 @@ $( function() {
     crossOrigin: true
   }).addTo(map);
 
-  $.getJSON(URL,function(data){
+  fetch(URL)
+  .then(function(response){ return response.json() })
+  .then(function(data){
+  
+    var entireHome = L.geoJson(data, { 
+      filter: function(feature) { return feature.properties.room_type == "Entire home/apt" }
+    });
+  
+    var privateRoom = L.geoJson(data, { 
+      filter: function(feature) { return feature.properties.room_type == "Private room" }
+    });
+
+    var allRooms = L.layerGroup([entireHome, privateRoom]);
+    allRooms.addTo(map);
+  
+    L.control.layers({
+      "All rooms": allRooms,
+      "Entire home": entireHome,
+      "Private Room": privateRoom
+    }).addTo(map);
+  
+  });
+
+  /** 
+  var allmapData = $.getJSON(URL,function(data){
     L.geoJson(data,{
       onEachFeature: function (feature, layer) {
         layer.bindPopup("<b>Name:</b> " + feature.properties.name 
         + "<br><b>Neighborhood:</b> " + feature.properties.neighbourhood
         + "<br><b>Room Type:</b> " + feature.properties.room_type 
         + "<br><b>Price:</b> $" + feature.properties.price);
-  }
-}).addTo(map);
-});
+      }
+   }).addTo(map);
+  });
+  
+  var entireRoomData = $.getJSON(URL,function(data){
+    L.geoJson(data,{
+      onEachFeature: function (feature, layer) {
+        layer.bindPopup("<b>Name:</b> " + feature.properties.name 
+        + "<br><b>Neighborhood:</b> " + feature.properties.neighbourhood
+        + "<br><b>Room Type:</b> " + feature.properties.room_type 
+        + "<br><b>Price:</b> $" + feature.properties.price);
+      },
+      filter: function(feature, layer) {
+
+      }
+   }).addTo(map);
+  });
+  
+   */
