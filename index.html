@@ -33,7 +33,7 @@
 <body>
     <header class="headertop">
         <h1>AirBNB Listings In Seattle</h1>
-        <p>Explore <a href="about.html">Seattle’s</a> AirBNB listings, where are the most lucrative areas of Seattle?</p>
+        <p>Explore <a href="about.html" alt="About Seattle">Seattle’s</a> AirBNB listings, where are the most lucrative areas of Seattle?</p>
     </header>
     
     <div class="contain">
@@ -44,15 +44,15 @@
       <div class="col-2 filters">
           <div class="card"> 
             <h2>Explore By Room Type</h2>
-              <input type="radio" id="allRooms" name="fltRoom" value="All" checked> All Rooms
-              <input type="radio" id="entireRoom" name="fltRoom" value="Entire"><span class="entire"> Entire Room</span>
-              <input type="radio" id="privateRoom" name="fltRoom" value="Private"><span class="private"> Private Room </span>
+              <input type="radio" aria-label="All Rooms" id="allRooms" name="fltRoom" value="All" checked> All Rooms
+              <input type="radio" aria-label="Entire Room" id="entireRoom" name="fltRoom" value="Entire"><span class="entire"> Entire Room</span>
+              <input type="radio" aria-label="Private Room" id="privateRoom" name="fltRoom" value="Private"><span class="private"> Private Room </span>
           </div>
           <div class="card"> 
             <h2>Explore By Price</h2>
             <p>
               <!-- jquery slider code -->
-              <label for="amount">Price range:</label>
+              <label for="amount" aria-label="price range">Price range:</label>
               <input type="text" class="range" id="amount" aria-label="price range">
             </p>
              
@@ -63,7 +63,7 @@
             <h2>Explore By Number of Reviews</h2>
             <p>
               <!-- jquery slider code -->
-              <label for="amount2">Number of Reviews:</label>
+              <label for="amount2" aria-label="review range">Number of Reviews:</label>
               <input type="text" class="range" id="amount2" aria-label="review range">
             </p>
 
@@ -79,7 +79,9 @@
     </div>
 
     <footer>
-        <p>© Nicole Carver 2020</p>
+        <p>© Nicole Carver 2020 
+          <br> Data from <a href="http://insideairbnb.com/get-the-data.html">Inside Airbnb</a>
+        </p>
     </footer>
   </body>
 

@@ -51,6 +51,8 @@ $( function() {
     let maxPrice = 750;
     let minReview = 0;
     let maxReview = 100;
+    
+    let roomType = "All";
 
     function filterPrices() {
       fetch(URL)
@@ -64,8 +66,15 @@ $( function() {
             + "<br><b>Room Type:</b> " + feature.properties.room_type 
             + "<br><b>Price:</b> $" + feature.properties.price);
           }, 
-          filter: function(feature) { return (feature.properties.price >= minPrice) && (feature.properties.price <= maxPrice) &&
-            (feature.properties.number_of_reviews >= minReview) && (feature.properties.number_of_reviews <= maxReview)}
+          filter: function(feature) { 
+            if(roomType != "All") {
+              return (feature.properties.price >= minPrice) && (feature.properties.price <= maxPrice) &&
+              (feature.properties.number_of_reviews >= minReview) && (feature.properties.number_of_reviews <= maxReview) && feature.properties.room_type == roomType;
+            }
+
+            return (feature.properties.price >= minPrice) && (feature.properties.price <= maxPrice) &&
+              (feature.properties.number_of_reviews >= minReview) && (feature.properties.number_of_reviews <= maxReview);
+          }
         }).addTo(map);
       })
     } 
@@ -82,7 +91,13 @@ $( function() {
             + "<br><b>Room Type:</b> " + feature.properties.room_type 
             + "<br><b>Price:</b> $" + feature.properties.price);
           }, 
-          filter: function(feature) { return (feature.properties.number_of_reviews >= minReview) && (feature.properties.number_of_reviews <= maxReview) 
+          filter: function(feature) { 
+            if(roomType != "All") {
+              return (feature.properties.price >= minPrice) && (feature.properties.price <= maxPrice) &&
+              (feature.properties.number_of_reviews >= minReview) && (feature.properties.number_of_reviews <= maxReview) && feature.properties.room_type == roomType;
+            }
+            
+            return (feature.properties.number_of_reviews >= minReview) && (feature.properties.number_of_reviews <= maxReview) 
             && (feature.properties.price >= minPrice) && (feature.properties.price <= maxPrice)}
         }).addTo(map);
       })
@@ -114,8 +129,14 @@ $( function() {
         + "<br><b>Room Type:</b> " + feature.properties.room_type 
         + "<br><b>Price:</b> $" + feature.properties.price);
       }, 
-      filter: function(feature) { return feature.properties.room_type == "Entire home/apt" && (feature.properties.number_of_reviews >= minReview) && (feature.properties.number_of_reviews <= maxReview) 
-      && (feature.properties.price >= minPrice) && (feature.properties.price <= maxPrice)}
+      filter: function(feature) { 
+        if(roomType != "All") {
+          return feature.properties.room_type == "Entire home/apt" && (feature.properties.number_of_reviews >= minReview) && (feature.properties.number_of_reviews <= maxReview) 
+          && (feature.properties.price >= minPrice) && (feature.properties.price <= maxPrice) && feature.properties.room_type == roomType;
+      } 
+
+      return feature.properties.room_type == "Entire home/apt" && (feature.properties.number_of_reviews >= minReview) && (feature.properties.number_of_reviews <= maxReview) 
+        && (feature.properties.price >= minPrice) && (feature.properties.price <= maxPrice)}
     });
   
     privateRoom = L.geoJson(data, {
@@ -125,8 +146,14 @@ $( function() {
         + "<br><b>Room Type:</b> " + feature.properties.room_type 
         + "<br><b>Price:</b> $" + feature.properties.price);
       }, 
-      filter: function(feature) { return feature.properties.room_type == "Private room" && (feature.properties.number_of_reviews >= minReview) && (feature.properties.number_of_reviews <= maxReview) 
-      && (feature.properties.price >= minPrice) && (feature.properties.price <= maxPrice) }
+      filter: function(feature) { 
+        if(roomType != "All") {
+          return feature.properties.room_type == "Private room" && (feature.properties.number_of_reviews >= minReview) && (feature.properties.number_of_reviews <= maxReview) 
+          && (feature.properties.price >= minPrice) && (feature.properties.price <= maxPrice) && feature.properties.room_type == roomType;
+        }
+
+        return feature.properties.room_type == "Private room" && (feature.properties.number_of_reviews >= minReview) && (feature.properties.number_of_reviews <= maxReview) 
+          && (feature.properties.price >= minPrice) && (feature.properties.price <= maxPrice)}
     });
 
     allRooms = L.featureGroup([entireHome, privateRoom]);
@@ -147,11 +174,16 @@ $( function() {
           map.removeLayer(layer);
       });
       _callback();
-    }
+   }
 
     var radioButtons = document.getElementsByName('fltRoom');
     for (var r in radioButtons){
       radioButtons[r].onclick = function() {
+        if(this.value == "Entire")
+          roomType = "Entire home/apt";
+        else if(this.value == "Private")
+          roomType = "Private room";
+
         switch (this.value) {
           
           case 'Entire':
